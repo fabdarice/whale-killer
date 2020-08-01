@@ -33,11 +33,33 @@ TOP_ACCOUNTS = [
     '0x6ac3ca8a477ccf000b8cb648d7d730c8694dfc7b',
     '0x284ab219c9942c614a86a3fa0ca060317f8ef80e',
     '0xd8977d0fc93181057ffe23965a0531e16cbf8d82',
-    '0x6ea5b0dda38273bc1816fc6b7df37c7e82f7a658'
+    '0x6ea5b0dda38273bc1816fc6b7df37c7e82f7a658',
+    '0xe62ed6862da2cc362dad49f734c13d992a5a97a2',
+    '0xb68d3d6103590826749527ea80171253bebf6129',
+    '0xd54e46c138c3c84f4b39669cbe15f00697c078e5',
+    '0xb60704d2cd7dcd1468675a68f4ec43791ce35ef9',
+    '0x320bb16ad49c27825e619a1ce658aeb4bcd68af0',
+    '0xc671a41162789649457058c4ee454d6fccd2c44c',
+    '0x8f71c90eb559325e5ba23b2323b2e1b7e0e6fe13',
+    '0x2d643e9c2dbe4c2878a5b0d15f14b5b40302e5d5',
+    '0x274b7950c0b420e112b8b0f53c6fb7b2f1bfe954',
+    '0x30f1d1ffad34b24bb8310ad9dd237b854b4daea7',
+    '0x83811fdb8c4274d676af222cb9ecd8d63ef55fb4',
+    '0x63df7d9d7795883d56ca290f94aba8a6aa4f6f22',
+    '0xb18fec1821c05e0c3c692c3abf54af518af7cfe2',
+    '0x996d5138843993cebc554c20d82310a43802aff1',
+    '0x834e62d799e1ac21114f110c433a85afac36be12',
+    '0x630db35a7dfcf53a56551afc86281959525a1f04',
+    '0xfd27d5f814c1ce1f7012ba06a2a82d97225689a5',
+    '0xf7f742bd5f7148115ac89c6dac568179e787c0e6',
+    '0x971da287666762d75eaf70b4772be32e7f322ba2',
+    '0x02d48d196b17a04f1ca8ff9a822ceea80793a7ea',
+    '0xd7b65068b5ac722626bafb447a00e051427d2dd4',
 ]
 
 
 def main():
+    print('Scanning for Whales...')
     latest_block = get_latest_block() - BLOCK_PER_DAY
     while True:
         for account in TOP_ACCOUNTS:
@@ -59,22 +81,23 @@ def get_internal_txs(account: str, from_block: int):
     json_resp = json.loads(resp.text)
     ampl_results = [result for result in json_resp['result']
                     if result['tokenSymbol'] == 'AMPL']
-    print('---------------------------------------------------------------------')
-    print('---------------------------------------------------------------------')
-    print(stylize(f'[ACCOUNT : {account}]', colored.attr('bold')))
-    for result in ampl_results:
-        value = int(result['value']) / (10 ** int(result['tokenDecimal']))
-        if result['from'] == account:
-            print(stylize('DANGER - TRANSFER OUT >>>>>>>>>>>>>', colored.fg('red')))
-            notify('Whale Detected', f'{value} AMPL')
-        else:
-            print(stylize('TRANSFER IN <<<<<<<<<<<<<<', colored.fg('green')))
-        date = datetime.datetime.fromtimestamp(int(result['timeStamp'])).strftime('%Y-%m-%d %H:%M:%S')
-        print(f'Timestamp: {date}')
-        print(f'Hash: https://etherscan.io/tx/{result["hash"]}')
-        # n = notify2.Notification('Whale Detected', f'{value} AMPL', 'notification-message-im')
-        # n.show()
-        print(f'Value: {value} AMPL \n')
+    if len(ampl_results):
+        print('---------------------------------------------------------------------')
+        print('---------------------------------------------------------------------')
+        print(stylize(f'[ACCOUNT : {account}]', colored.attr('bold')))
+        for result in ampl_results:
+            value = int(result['value']) / (10 ** int(result['tokenDecimal']))
+            if result['from'] == account:
+                print(stylize('DANGER - TRANSFER OUT >>>>>>>>>>>>>', colored.fg('red')))
+                notify('Whale Detected', f'{value} AMPL')
+            else:
+                print(stylize('TRANSFER IN <<<<<<<<<<<<<<', colored.fg('green')))
+            date = datetime.datetime.fromtimestamp(int(result['timeStamp'])).strftime('%Y-%m-%d %H:%M:%S')
+            print(f'Timestamp: {date}')
+            print(f'Hash: https://etherscan.io/tx/{result["hash"]}')
+            # n = notify2.Notification('Whale Detected', f'{value} AMPL', 'notification-message-im')
+            # n.show()
+            print(f'Value: {value} AMPL \n')
 
 def notify(title, text):
     os.system("""
