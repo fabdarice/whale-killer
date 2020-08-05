@@ -10,7 +10,7 @@ from colored import stylize
 
 BLOCK_TIME = 15
 BLOCK_PER_DAY = 86400 / BLOCK_TIME
-API_KEY = "2M71VCXDFFYRA6U1V81EP4SZUW7GU3W6TD"
+API_KEY = os.environ['ETHERSCAN_API_KEY']
 ETHERSCAN_API = "https://api.etherscan.io/api"
 DELAY_SLEEP_SEC = 0.5
 
@@ -51,8 +51,7 @@ TOP_SUKU_HOLDERS = [
     "0x0537e9b7fdb0601dcbbef5ab9b2c7d3ce429b663",
 ]
 
-
-TOP_ACCOUNTS = [
+TOP_AMPL_HOLDERS = [
     "0xb22ed4bec314d475a8782e0b6869f0144d46859c",
     "0xbdb30cf89efdd8c7410d9b3d0de04bc41b962770",
     "0xf0d611b2610352600f7055e418e547e1c956c046",
@@ -62,11 +61,13 @@ TOP_ACCOUNTS = [
     "0x85a07da377a4de02409fa2a05616743f1392bb90",
     "0xa65ce68e9d62a6bb640a567926e215efe5ee11e0",
     "0x3dd9bc86880a0678df824df117dbc7d577c471c4",
+    '0x30ab95456e89450c6ea568a62f27f844995cf9e6',
     "0x27ce693e2efdf15b0705da999513c9a2403cf064",
     "0x56841730991ca95830fc7a7604bf790127ac362f",
     "0x6206e13b1e6634c76e4e73bcfac51c294cf7520d",
     "0x390aad4274545912d0d4e94c19349c00423c8e36",
     "0x13c210e4a2035446cf02e5b8ac42b6b9a12f8675",
+    '0x0d39f2862ef7594e631f3df472d8ad0dc15e31ef',
     "0x2f5dcb123fe87bd4e7e14cf0a9345b790091b78e",
     "0x6ac3ca8a477ccf000b8cb648d7d730c8694dfc7b",
     "0x284ab219c9942c614a86a3fa0ca060317f8ef80e",
@@ -91,6 +92,7 @@ TOP_ACCOUNTS = [
     "0xfd27d5f814c1ce1f7012ba06a2a82d97225689a5",
     "0xf7f742bd5f7148115ac89c6dac568179e787c0e6",
     "0x971da287666762d75eaf70b4772be32e7f322ba2",
+    '0xf10a04c222f150455ece627f729b5167d957e360',
     "0x02d48d196b17a04f1ca8ff9a822ceea80793a7ea",
     "0xd7b65068b5ac722626bafb447a00e051427d2dd4",
     "0x8bd3e86bb7470ab48436a8c5ff19a0f6e9121b42",
@@ -120,21 +122,35 @@ TOP_ACCOUNTS = [
     "0x6f3a12d251063b9e06873875044ff5b53ebf0fdb",
     "0x9dfe1a419cf2dfdf8cb48998a8984c014d9192ff",
     "0x2d89d869a187a8775be99e80863eb3973f74bad0",
+    '0x0e115a21c34708fda175cc9c924ba42a6d87f95d',
+    '0x6d6075b67ea8a9bf2276ec42de689bcc59c2e65e',
+    '0x3beaec38ee662b0de92fcb0cfdb31c2eb1b8d164',
+    '0x6e6b0c9e77374f6c2cf26fe7fd096b02930e61fe',
+    '0x964d9d1a532b5a5daeacbac71d46320de313ae9c',
+    '0x0b30483057d6a7798378edba707d625116ed7640',
+    '0x18b35d1799385a7548b1c8ed481c5c6ad4921f96',
+    '0x37d50885b44500a2eacab7c93dd349590600f05f',
+    '0x5701b444dc106089b56ba2193fd7f82234abc2b0',
+    '0xf64eff52e524174a0be07beae0322f11ec09a062',
+    '0x6ce6e32fcd75373fd59476f8b5122502144825e6',
+    '0x94a3c225d8d469eb578a8a81a7301a357807d966',
+    '0x706a39f86f174d26c0b5285721fbc48beaa192a0',
 ]
 
 
-TOKEN_SYMBOL = "SUKU"
 
+TOKEN_SYMBOL = "AMPL"
+ACCOUNTS = TOP_AMPL_HOLDERS
 
 def main():
     print("Scanning for Whales...")
-    latest_block = get_latest_block()
+    latest_block = get_latest_block() - 10
     while True:
-        for i, account in enumerate(TOP_SUKU_HOLDERS):
+        for i, account in enumerate(ACCOUNTS):
             get_internal_txs(i, account, latest_block)
             time.sleep(DELAY_SLEEP_SEC)
         latest_block = get_latest_block() - (
-            DELAY_SLEEP_SEC * len(TOP_ACCOUNTS) / BLOCK_TIME
+            DELAY_SLEEP_SEC * len(ACCOUNTS) / BLOCK_TIME
         )
 
 
