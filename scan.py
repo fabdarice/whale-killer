@@ -14,6 +14,7 @@ from holders.sta import ADDRESSES as STA_ADDRESSES
 from holders.suku import ADDRESSES as SUKU_ADDRESSES
 
 BLOCK_TIME = 15
+BLOCK_PER_HOUR = 3600 / BLOCK_TIME
 BLOCK_PER_DAY = 86400 / BLOCK_TIME
 API_KEY = os.environ['ETHERSCAN_API_KEY']
 ETHERSCAN_API = "https://api.etherscan.io/api"
@@ -29,10 +30,10 @@ TOP_HOLDERS_MAPPING = {
 
 @click.command()
 @click.option('--token', prompt='The Token Name')
-@click.option('--since-block', help='Since X Blocks', default=0)
-def main(token: str, since_block: int):
+@click.option('--minus-hours', help='Minus X Hours', default=0)
+def main(token: str, minus_hours: int):
     print(f'Scanning for {token} Whales...')
-    latest_block = get_latest_block() - since_block
+    latest_block = get_latest_block() - minus_hours * BLOCK_PER_HOUR
     top_holders = TOP_HOLDERS_MAPPING[f'{token.upper()}']
     while True:
         for i, account in enumerate(top_holders):
