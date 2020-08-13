@@ -11,6 +11,7 @@ from colored import stylize
 
 from holders.ampl import ADDRESSES as AMPL_ADDRESSES
 from holders.sta import ADDRESSES as STA_ADDRESSES
+from holders.sta import UNISWAP as STA_UNISWAP
 from holders.suku import ADDRESSES as SUKU_ADDRESSES
 
 BLOCK_TIME = 15
@@ -27,17 +28,22 @@ TOP_HOLDERS_MAPPING = {
     'STA': STA_ADDRESSES,
 }
 
+UNISWAP_MAPPING = {
+    'STA': STA_UNISWAP
+}
+
 
 @click.command()
 @click.option('--token', prompt='The Token Name')
 @click.option('--minus-hours', help='Minus X Hours', default=0)
-def main(token: str, minus_hours: int):
+@click.option('--uniswap-only', help='Only Uniswap From/To', default=True)
+def main(token: str, minus_hours: int, uniswap_only: bool):
     print(f'Scanning for {token} Whales...')
     latest_block = get_latest_block() - minus_hours * BLOCK_PER_HOUR
     top_holders = TOP_HOLDERS_MAPPING[f'{token.upper()}']
     while True:
         for i, account in enumerate(top_holders):
-            get_internal_txs(i, account, latest_block, token)
+            get_internal_txs(i, account, latest_block, token, uniswap_only)
             time.sleep(DELAY_SLEEP_SEC)
         latest_block = get_latest_block() - (
             DELAY_SLEEP_SEC * len(top_holders) / BLOCK_TIME
@@ -51,17 +57,17 @@ def get_latest_block() -> int:
     return int(hex_block, 16)
 
 
-def get_internal_txs(i: int, account: str, from_block: int, token: str):
+def get_internal_txs(i: int, account: str, from_block: int, token: str, uniswap_only: bool):
     url = f"{ETHERSCAN_API}?module=account&action=tokentx&address={account}&startblock={from_block}&page=1&offset=50&sort=asc&apikey={API_KEY}"
     resp = requests.get(url)
     json_resp = json.loads(resp.text)
     try:
-        ampl_results = [
+        results = [
             result
             for result in json_resp["result"]
-            if result["tokenSymbol"] == token
+            if result["tokenSymbol"] == token and (not uniswap_only or result['to'] == UNISWAP_MAPPING[token])
         ]
-        if len(ampl_results):
+        if len(results):
             print(
                 "---------------------------------------------------------------------"
             )
@@ -69,7 +75,8 @@ def get_internal_txs(i: int, account: str, from_block: int, token: str):
                 "---------------------------------------------------------------------"
             )
             print(stylize(f"[#{i}][ACCOUNT : {account}]", colored.attr("bold")))
-            for result in ampl_results:
+            for result in results:
+
                 value = int(result["value"]) / (10 ** int(result["tokenDecimal"]))
                 if result["from"] == account:
                     print(
