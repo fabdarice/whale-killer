@@ -65,7 +65,7 @@ def get_internal_txs(i: int, account: str, from_block: int, token: str, uniswap_
         results = [
             result
             for result in json_resp["result"]
-            if result["tokenSymbol"] == token and (not uniswap_only or result['to'] == UNISWAP_MAPPING[token])
+            if result["tokenSymbol"] == token and (not uniswap_only or result['to'] == UNISWAP_MAPPING[token] or result['from'] == UNISWAP_MAPPING[token])
         ]
         if len(results):
             print(
