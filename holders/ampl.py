@@ -97,3 +97,5 @@ ADDRESSES = [
     '0xe10c540088113fa6ec00b4b2c8824f8796e96ec4',
     '0xc8a7dd90d2fb862f1db3a1f987f12e31f9d6ba47'
 ]
+
+UNISWAP = '0xc5be99a02c6857f9eac67bbce58df5572498f40c'

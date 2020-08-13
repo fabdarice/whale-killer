@@ -10,9 +10,22 @@ import requests
 from colored import stylize
 
 from holders.ampl import ADDRESSES as AMPL_ADDRESSES
+from holders.ampl import UNISWAP as AMPL_UNISWAP
+from holders.lid import ADDRESSES as LID_ADDRESSES
+from holders.lid import UNISWAP as LID_UNISWAP
+from holders.meta import ADDRESSES as MTA_ADDRESSES
+from holders.meta import UNISWAP as MTA_UNISWAP
+from holders.myx import ADDRESSES as MYX_ADDRESSES
+from holders.myx import UNISWAP as MYX_UNISWAP
+from holders.orion import ADDRESSES as ORN_ADDRESSES
+from holders.orion import UNISWAP as ORN_UNISWAP
+from holders.power import ADDRESSES as POWER_ADDRESSES
+from holders.power import UNISWAP as POWER_UNISWAP
 from holders.sta import ADDRESSES as STA_ADDRESSES
 from holders.sta import UNISWAP as STA_UNISWAP
 from holders.suku import ADDRESSES as SUKU_ADDRESSES
+from holders.tellor import ADDRESSES as TRB_ADDRESSES
+from holders.tellor import UNISWAP as TRB_UNISWAP
 
 BLOCK_TIME = 15
 BLOCK_PER_HOUR = 3600 / BLOCK_TIME
@@ -26,10 +39,23 @@ TOP_HOLDERS_MAPPING = {
     'AMPL': AMPL_ADDRESSES,
     'SUKU': SUKU_ADDRESSES,
     'STA': STA_ADDRESSES,
+    'ORN': ORN_ADDRESSES,
+    'TRB': TRB_ADDRESSES,
+    'MTA': MTA_ADDRESSES,
+    'MYX': MYX_ADDRESSES,
+    'LID': LID_ADDRESSES,
+    'POWER': POWER_ADDRESSES,
 }
 
 UNISWAP_MAPPING = {
-    'STA': STA_UNISWAP
+    'STA': STA_UNISWAP,
+    'AMPL': AMPL_UNISWAP,
+    'ORN': ORN_UNISWAP,
+    'TRB': TRB_UNISWAP,
+    'MTA': MTA_UNISWAP,
+    'MYX': MYX_UNISWAP,
+    'LID': LID_UNISWAP,
+    'POWER': POWER_UNISWAP
 }
 
 
@@ -74,6 +100,7 @@ def get_internal_txs(i: int, account: str, from_block: int, token: str, uniswap_
             print(
                 "---------------------------------------------------------------------"
             )
+
             print(stylize(f"[#{i}][ACCOUNT : {account}]", colored.attr("bold")))
             for result in results:
 
