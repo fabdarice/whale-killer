@@ -1,4 +1,4 @@
 colored==1.4.2
-requests==2.24.0
+requests==2.31.0
 click==7.1.2
 web3
